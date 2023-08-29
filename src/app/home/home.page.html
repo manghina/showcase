@@ -1,0 +1,38 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Blank
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="main">
+    <div [@slideInLeft] *ngIf="activeItem == 0" id="container">
+      <strong>Ready to create an app?</strong>
+      <p>Start with Ionic <a target="_blank" rel="noopener noreferrer"
+          href="https://ionicframework.com/docs/components">UI Components</a></p>
+    </div>
+
+    <div [@slideInLeft] *ngIf="activeItem == 1" id="container">
+      <strong>Ready to create an app2?</strong>
+      <p>Start with Ionic2 <a target="_blank" rel="noopener noreferrer"
+          href="https://ionicframework.com/docs/components">UI Components</a></p>
+    </div>
+
+    <div [@slideInLeft] *ngIf="activeItem == 2" id="container">
+      <strong>Ready to create an app3?</strong>
+      <p>Start with Ionic3 <a target="_blank" rel="noopener noreferrer"
+          href="https://ionicframework.com/docs/components">UI Components</a></p>
+    </div>
+  </div>
+  <ion-footer>
+    <ion-toolbar>
+      <div class="flex flex-wrap gap-2">
+        <ion-icon (click)="toggleTab(0)" name="home-outline" class="{{activeItem == 0 ? 'active': ''}}"></ion-icon>
+        <ion-icon (click)="toggleTab(1)" name="documents-outline" class="{{activeItem == 1 ? 'active': ''}}"></ion-icon>
+        <ion-icon (click)="toggleTab(2)" name="camera-outline" class="{{activeItem == 2 ? 'active': ''}}"></ion-icon>
+      </div>
+    </ion-toolbar>
+  </ion-footer>
+</ion-content>
