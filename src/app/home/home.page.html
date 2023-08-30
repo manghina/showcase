@@ -8,23 +8,20 @@
 
 <ion-content [fullscreen]="true">
   <div class="main">
-    <div [@slideInLeft] *ngIf="activeItem == 0" id="container">
-      <strong>Ready to create an app?</strong>
-      <p>Start with Ionic <a target="_blank" rel="noopener noreferrer"
-          href="https://ionicframework.com/docs/components">UI Components</a></p>
-    </div>
-
-    <div [@slideInLeft] *ngIf="activeItem == 1" id="container">
-      <strong>Ready to create an app2?</strong>
-      <p>Start with Ionic2 <a target="_blank" rel="noopener noreferrer"
-          href="https://ionicframework.com/docs/components">UI Components</a></p>
-    </div>
-
-    <div [@slideInLeft] *ngIf="activeItem == 2" id="container">
-      <strong>Ready to create an app3?</strong>
-      <p>Start with Ionic3 <a target="_blank" rel="noopener noreferrer"
-          href="https://ionicframework.com/docs/components">UI Components</a></p>
-    </div>
+    <ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
+      <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="ex1-tab-1" data-mdb-toggle="tab" href="#ex1-tabs-1" role="tab"
+          aria-controls="ex1-tabs-1" aria-selected="true">Tab 1</a>
+      </li>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" id="ex1-tab-2" data-mdb-toggle="tab" href="#ex1-tabs-2" role="tab"
+          aria-controls="ex1-tabs-2" aria-selected="false">Tab 2</a>
+      </li>
+      <li class="nav-item" role="presentation">
+        <a class="nav-link" id="ex1-tab-3" data-mdb-toggle="tab" href="#ex1-tabs-3" role="tab"
+          aria-controls="ex1-tabs-3" aria-selected="false">Tab 3</a>
+      </li>
+    </ul>
   </div>
   <ion-footer>
     <ion-toolbar>
