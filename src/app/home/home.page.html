@@ -1,35 +1,168 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+      <div class="d-flex justify-content-between">
+        <div>
+          {{ title }}
+        </div>
+        <div>
+          <ng-container *ngIf="counter == 0">
+            <ion-icon  (click)="newPdf()" name="add-outline"></ion-icon>
+          </ng-container>          
+        </div>
+          
+      </div>
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <div class="main">
-    <ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
-      <li class="nav-item" role="presentation">
-        <a class="nav-link active" id="ex1-tab-1" data-mdb-toggle="tab" href="#ex1-tabs-1" role="tab"
-          aria-controls="ex1-tabs-1" aria-selected="true">Tab 1</a>
-      </li>
-      <li class="nav-item" role="presentation">
-        <a class="nav-link" id="ex1-tab-2" data-mdb-toggle="tab" href="#ex1-tabs-2" role="tab"
-          aria-controls="ex1-tabs-2" aria-selected="false">Tab 2</a>
-      </li>
-      <li class="nav-item" role="presentation">
-        <a class="nav-link" id="ex1-tab-3" data-mdb-toggle="tab" href="#ex1-tabs-3" role="tab"
-          aria-controls="ex1-tabs-3" aria-selected="false">Tab 3</a>
-      </li>
-    </ul>
-  </div>
-  <ion-footer>
-    <ion-toolbar>
-      <div class="flex flex-wrap gap-2">
-        <ion-icon (click)="toggleTab(0)" name="home-outline" class="{{activeItem == 0 ? 'active': ''}}"></ion-icon>
-        <ion-icon (click)="toggleTab(1)" name="documents-outline" class="{{activeItem == 1 ? 'active': ''}}"></ion-icon>
-        <ion-icon (click)="toggleTab(2)" name="camera-outline" class="{{activeItem == 2 ? 'active': ''}}"></ion-icon>
+
+
+
+    <div class="tab-content" id="ex1-content">
+      <div
+        class="tab-pane fade show active"
+        id="ex1-tabs-1"
+        role="tabpanel"
+        aria-labelledby="ex1-tab-1"
+      >
+
+      <ion-card (click)="show(s.id)" class="card" *ngFor="let s of showcases">
+
+        <ion-card-header>
+          <ion-card-title>{{s.name}}</ion-card-title>
+          <ion-card-subtitle>Creato il: {{s.timestamp | date: 'Y-MM-dd'}} </ion-card-subtitle>
+        </ion-card-header>
+      
+        <ion-card-content>
+          <div class="d-flex justify-content-between col-12">
+            <div><span>Regolare: <b class="text-success">{{s.success}}</b> Non a norma: <b class="text-danger">{{s.error}}</b></span></div>
+            <div><ion-icon (click)="showPdf(s.id)" name="arrow-forward-outline"></ion-icon></div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+      
       </div>
-    </ion-toolbar>
+      </div>
+
+      <div class="tab-pane fade" id="ex1-tabs-2" style="padding-top: 1em;" role="tabpanel" aria-labelledby="ex1-tab-2">
+        <ion-slides (ionSlideDidChange)="updateSlideIndex($event)" #mySlider pager="false">
+          <ion-slide *ngFor="let pdf of pdf.images;let i = index">
+          <div>
+            <div><h1>Fotografia #{{i + 1}}</h1></div>
+            <div>
+              <ion-list>
+                <ion-item>
+                  <div class="d-flex justify-content-between col-12">
+                    <div class="col-10">
+                      <img class="image" alt="Silhouette of mountains" src="{{pdf.src ? pdf.src : 'assets/images/image.png'}}" />
+                    </div>
+                    <div class="d-flex flex-column justify-content-center align-items-center">
+                      <div>
+                        <ion-icon (click)="addPhotoToGallery(i)" name="camera-outline"></ion-icon>
+                      </div>
+                      <div>
+                        <ion-icon name="image-outline"></ion-icon>
+                      </div>
+                    </div>
+                  </div>
+                </ion-item>
+
+                <ion-item>
+                  <ion-input [(ngModel)]="pdf.name" labelPlacement="floating" value="hi@ionic.io">
+                    <div slot="label">Etichetta foto</div>
+                  </ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-select [(ngModel)]="pdf.desc" label="Descrizione" labelPlacement="stacked" placeholder="Precompilate">
+                    <ion-select-option value="Marcatura leggibile">Marcatura leggibile</ion-select-option>
+                    <ion-select-option value="No deformazioni e/o cricche visive">No deformazioni e/o cricche visive</ion-select-option>
+                    <ion-select-option value="Nessuna corrosione e/o ossidazione visiva">Nessuna corrosione e/o ossidazione visiva</ion-select-option>  
+                    <ion-select-option value="Collegamenti a vite serrati">Collegamenti a vite serrati</ion-select-option>
+                    <ion-select-option value="Fissaggio al sottofondo">Fissaggio al sottofondo</ion-select-option>
+                    <ion-select-option value="Stabilità">Stabilità</ion-select-option>
+                    <ion-select-option value="Coppia di serraggio dei fissaggi">Coppia di serraggio dei fissaggi</ion-select-option>
+                    <ion-select-option value="Libertà di movimento di tutte le parti mobili">Libertà di movimento di tutte le parti mobili</ion-select-option>
+                    <ion-select-option value="Controllo manuale/visivo fune">Controllo manuale/visivo fune</ion-select-option>
+                    <ion-select-option value="Precarico della fune">Precarico della fune</ion-select-option>
+                  </ion-select>             
+                </ion-item>
+
+
+                <ion-item>
+                  <ion-textarea placeholder="Descrizione" [(ngModel)]="pdf.desc" label="Descrizione" labelPlacement="stacked" placeholder="">
+              
+                  </ion-textarea>                  
+                </ion-item>
+
+              </ion-list>
+            </div>
+          </div>
+          </ion-slide>
+
+        </ion-slides>
+        
+        <div class="d-flex flex-row align-items-center justify-content-center col-12">
+          {{currentIndex}} / {{pdf.images.length}}
+        </div>
+
+        <div style="padding: 1em;padding-bottom: 10px;" class="d-flex justify-content-between">
+          <ion-button class="col-6" (click)="addSection()" ><ion-icon name="add-outline"></ion-icon> Prossima foto</ion-button>
+          <ion-button class="col-6" (click)="savePdf()" ><ion-icon name="save-outline"></ion-icon> Salva</ion-button>         
+        </div>
+
+        <div style="padding: 1em;padding-top:0px;" class="d-flex justify-content-between">
+          <ion-button class="col-12" ><ion-icon name="document-outline"></ion-icon> Genera pdf</ion-button>    
+        </div>
+
+      <div class="tab-pane fade" id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
+        {{ pdf | json}}
+      </div>
+    </div>
+  </div>
+  </ion-content>
+  <ion-footer>
+    <div class="footer">
+      <ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
+        <li (click)="toggleTab(0)" class="nav-item" role="presentation">
+          <a
+          class="nav-link {{activeItem == 0 ? 'active': ''}}"
+          id="ex1-tab-1"
+          data-bs-toggle="tab"
+          href="#ex1-tabs-1"
+          role="tab"
+          aria-controls="ex1-tabs-1"
+          aria-selected="true">
+          <ion-icon name="home-outline" class=""></ion-icon>
+        </a>
+        </li>
+        <li  (click)="toggleTab(1)"  class="nav-item" role="presentation">
+          <a
+          class="nav-link {{activeItem == 1 ? 'active': ''}}"
+          id="ex1-tab-2"
+          data-bs-toggle="tab"
+          href="#ex1-tabs-2"
+          role="tab"
+          aria-controls="ex1-tabs-2"
+          aria-selected="false">
+          <ion-icon name="documents-outline" class=""></ion-icon>
+        </a>
+        </li>
+        <li (click)="toggleTab(2)" class="nav-item" role="presentation">
+          <a
+          class="nav-link {{activeItem == 2 ? 'active': ''}}"
+          id="ex1-tab-3"
+          data-bs-toggle="tab"
+          href="#ex1-tabs-3"
+          role="tab"
+          aria-controls="ex1-tabs-3"
+          aria-selected="false">
+          <ion-icon name="camera-outline" class=""></ion-icon>
+        </a>
+        </li>
+      </ul>
+    </div>
   </ion-footer>
-</ion-content>

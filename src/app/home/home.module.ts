@@ -7,6 +7,10 @@ import { TabMenuModule } from 'primeng/tabmenu';
 import { TabViewModule } from 'primeng/tabview';
 import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
+import {CardModule} from 'primeng/card';
+import { FormsModule } from '@angular/forms';
+
+
 @NgModule({
   imports: [
     CommonModule,
@@ -15,8 +19,11 @@ import { HomePage } from './home.page';
     TabViewModule,
     TableModule,
     TabMenuModule,
+    CardModule,
+
+    FormsModule,
     HomePageRoutingModule
   ],
-  declarations: [HomePage]
+  declarations: [HomePage],
 })
 export class HomePageModule { }

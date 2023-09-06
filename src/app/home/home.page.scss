@@ -8,8 +8,27 @@
   transform: translateY(-50%);
 }
 
-.main {
-  height: 84vh;
+
+.footer {
+  width: 100%;
+  text-align: center;
+  font-size: 30px;  
+}
+
+.footer ul {
+  width: 100%;
+}
+
+.footer ul li { 
+  width: 33%;
+}
+
+.footer ul li a { 
+  color: black
+}
+
+.footer ul li a.active {
+  color: #3882FF;
 }
 
 #container strong {
@@ -36,6 +55,19 @@ ion-footer ion-icon {
   cursor: pointer;
 }
 
-.active {
-  color: #3882FF;
+ion-card {
+  cursor: pointer;
+}
+ion-card:hover {
+  border: color(53, 120, 229);
+  color: rgb(53, 120, 229)!important;
+}
+ion-icon {
+  font-size: 30px;
+}
+.image {
+  width: 260px;
+  height: 170px;
+  margin: 20px;
+  margin-left: 0px;
 }
