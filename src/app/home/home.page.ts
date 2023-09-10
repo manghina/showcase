@@ -5,6 +5,9 @@ import { UserPhoto } from '../models/UserPhoto';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { HttpClient } from '@angular/common/http';
 import { IonSlides } from '@ionic/angular';
+import { IonModal } from '@ionic/angular';
+import { OverlayEventDetail } from '@ionic/core/components';
+import { Filesystem, FilesystemDirectory } from '@capacitor/filesystem';
 
 @Component({
   selector: 'app-home',
@@ -19,6 +22,7 @@ export class HomePage implements AfterViewInit{
   title = 'La mia lista'
   pdf: any = {      
     title: '',
+    timestamp : new Date(),
     success : 0,
     error : 0,
     images : []
@@ -35,7 +39,8 @@ export class HomePage implements AfterViewInit{
   showcase : any = null;
 
   @ViewChild(IonSlides) slides: IonSlides | undefined
-  
+  @ViewChild(IonModal) modal: IonModal | undefined;
+
   constructor(public photoService : PhotoService,  public httpClient: HttpClient) {
     this.addSection();
 
@@ -152,6 +157,30 @@ export class HomePage implements AfterViewInit{
     this.httpClient.post("http://localhost/api.php", {...this.pdf, action:'create-pdf'}).subscribe((data)=>{
       this.pdf = data
     })
+  }
+
+  cancel() {
+    if(this.modal)
+    this.modal.dismiss(null, 'cancel');
+}
+
+confirm() {
+  if(this.modal)
+    this.modal.dismiss(null, 'cancel');
+//      this.modal.dismiss(this.name, 'confirm');
+  }
+
+  async createDirectory() {
+    try {
+      let ret = await Filesystem.mkdir({
+        path: 'input',
+        directory: FilesystemDirectory.Documents,
+        recursive: false,
+      });
+      alert(ret);
+    } catch (e) {
+      alert(e);
+    }    
   }
 
 }

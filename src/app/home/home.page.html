@@ -7,7 +7,7 @@
         </div>
         <div>
           <ng-container *ngIf="counter == 0">
-            <ion-icon  (click)="newPdf()" name="add-outline"></ion-icon>
+            <ion-icon  id="open-modal" (click)="newPdf()" name="add-outline"></ion-icon>
           </ng-container>          
         </div>
           
@@ -18,8 +18,6 @@
 
 <ion-content [fullscreen]="true">
   <div class="main">
-
-
 
     <div class="tab-content" id="ex1-content">
       <div
@@ -48,8 +46,35 @@
       </div>
 
       <div class="tab-pane fade" id="ex1-tabs-2" style="padding-top: 1em;" role="tabpanel" aria-labelledby="ex1-tab-2">
+        <ion-modal trigger="open-modal">
+          <ng-template>
+            <ion-header>
+              <ion-toolbar>
+                <ion-buttons slot="start">
+                  <ion-button (click)="cancel()">Annulla</ion-button>
+                </ion-buttons>
+                <ion-title>Nuovo PDF</ion-title>
+                <ion-buttons slot="end">
+                  <ion-button (click)="confirm()" [disabled]="!pdf.title" [strong]="true">Conferma</ion-button>
+                </ion-buttons>
+              </ion-toolbar>
+            </ion-header>
+            <ion-content class="ion-padding">
+              <ion-item>
+                <ion-label position="stacked">Nome del file</ion-label>
+                <ion-input type="text" placeholder="Report" [(ngModel)]="pdf.title"></ion-input>
+              </ion-item>
+            </ion-content>
+          </ng-template>
+        </ion-modal>
+        <div style="text-align: center;">
+          <h1>{{pdf.title}}</h1>
+          <p>Creato il: {{pdf.timestamp | date: 'dd-MM-Y'}}</p>
+        </div>
         <ion-slides (ionSlideDidChange)="updateSlideIndex($event)" #mySlider pager="false">
           <ion-slide *ngFor="let pdf of pdf.images;let i = index">
+
+
           <div>
             <div><h1>Fotografia #{{i + 1}}</h1></div>
             <div>
