@@ -1,13 +1,13 @@
 import { animate, group, query, style, transition, trigger } from '@angular/animations';
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { PhotoService } from '../services/photo.service';
 import { UserPhoto } from '../models/UserPhoto';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { HttpClient } from '@angular/common/http';
-import { IonSlides } from '@ionic/angular';
+import { IonMenu, IonSlides } from '@ionic/angular';
 import { IonModal } from '@ionic/angular';
-import { OverlayEventDetail } from '@ionic/core/components';
 import { Filesystem, FilesystemDirectory } from '@capacitor/filesystem';
+import { SessionStorageService } from 'ngx-storage-api';
 
 @Component({
   selector: 'app-home',
@@ -15,11 +15,11 @@ import { Filesystem, FilesystemDirectory } from '@capacitor/filesystem';
   styleUrls: ['home.page.scss'],
 
 })
-export class HomePage implements AfterViewInit{
+export class HomePage implements OnInit{
   currentIndex = 1;
   activeItem: number = 0;
   counter: number = 0;
-  title = 'La mia lista'
+  title = 'Home'
   pdf: any = {      
     title: '',
     timestamp : new Date(),
@@ -36,28 +36,38 @@ export class HomePage implements AfterViewInit{
   showcases : any[] = [
 
   ]
-  showcase : any = null;
-
+  currentMenuItem :any = null
   @ViewChild(IonSlides) slides: IonSlides | undefined
   @ViewChild(IonModal) modal: IonModal | undefined;
+  @ViewChild(IonMenu) menu: IonMenu | undefined;
 
-  constructor(public photoService : PhotoService,  public httpClient: HttpClient) {
-    this.addSection();
-
-    this.httpClient.post("http://localhost/api.php", {action : 'get-pdfs'}).subscribe((data: any)=>{
-      this.showcases = data
-    })
+  constructor(public photoService : PhotoService, private ref: ChangeDetectorRef, public httpClient: HttpClient, public storageService: SessionStorageService) {
+    this.createDirectory();
+    const data = this.storageService.getItem('pdf');
+    if(data)
+      this.showcases = JSON.parse(data)
+  }
+  
+  ngOnInit () {
+    this.ref.detectChanges();
   }
 
-  ngAfterViewInit() {
-
+  debug() {
+    debugger
   }
 
-  addPhotoToGallery(i:number) {
-    this.addNewToGallery().then((response) => {
-      const src = "data:image/jpeg;base64," + response.base64String
-      this.pdf.images[i].src = src
+  openMenu(s: any) {
+    this.currentMenuItem = s
+    if(this.menu)
+      this.menu.open()
+  }
+  async addPhotoToGallery(i:number) {
+    const capturedPhoto = await Camera.getPhoto({
+      resultType: CameraResultType.Uri,
+      source: CameraSource.Camera,
+      quality: 100
     });
+    this.pdf.images[i].src = capturedPhoto.webPath!
 
   }
 
@@ -68,25 +78,37 @@ export class HomePage implements AfterViewInit{
     })
   }
 
-  showPdf(id: number) {
-    this.httpClient.post("http://localhost/api.php", {action : 'get-pdf', id : id}).subscribe((data: any)=>{
-      this.showcase = data
-      var el = document.getElementById("ex1-tab-2")
-      if(el)
-        el.click()
-    })
+  menuSetPdf(s: any) {
+    this.currentMenuItem = s;
+  }
+  menuShowPdf() {
+    
+    const i =this.showcases.findIndex((item:any) => item.id == this.currentMenuItem.id)
+    this.showPdf(i)
+    this.menu?.close()
   }
 
-  
+  showPdf(ind: number) {
+    this.pdf = this.showcases[ind]
+    var el = document.getElementById("ex1-tab-2") 
+    if(el)
+      el.click() 
+  }
 
-  public async addNewToGallery() {
+  setSuccess(i: number, value:number) {
+    this.pdf.images[i].success = value
+  }
 
-    return await Camera.getPhoto({
-      source: CameraSource.Camera,
-      resultType: CameraResultType.Base64,
-      quality: 100
-    });
+  getFoto(s:any) {
+    return this.pdf.images.length
+  }
 
+  getSuccess(s:any) {
+    return s.images.filter((s:any) => s.success).length
+  }
+
+  getErrors(s:any) {
+    return s.images.filter((s:any) => s.success == 0).length
   }
 
   addSection() {
@@ -94,14 +116,18 @@ export class HomePage implements AfterViewInit{
       src : '',
       name : '',
       desc : '',
-      success : 0,
-      error : 0
-
+      success : 1
     })
-    if(this.slides)
-      this.slides.slideNext();
-  }
 
+      setTimeout(()=>{
+        if(this.slides) {
+          for(this.currentIndex; this.currentIndex < this.pdf.images.length; this.currentIndex++) {
+            this.slides.slideNext(300);
+          }
+        }
+    }, 400);          
+
+  }
 
   toggleTab(i: number) {
     if (i > this.activeItem) {
@@ -113,26 +139,33 @@ export class HomePage implements AfterViewInit{
     this.activeItem = i;
     switch(i) {
       case 0:
-        this.title = 'La mia lista';
+        this.title = 'Home';
         break;
       case 1:
-        this.title = 'Crea PDF';
+        this.title = 'PDF';
         break;
       case 2:
         this.title = 'Galleria';
         break;
         }
   }
+
   onNext() {
     this.counter++;
   }
 
+  delete() {
+    let text = "Confermi di voler eliminare il report?";
+    if (confirm(text) == true) {
+      const i =this.showcases.findIndex((item:any) => item.id == this.currentMenuItem.id)
+      this.showcases.splice(i,1)
+      this.menu?.close()
+      this.storageService.setItem('pdf', JSON.stringify(this.showcases))
+    }
+  }
+  
   onPrevious() {
     this.counter--;
-  }
-
-  show(id: number) {
-
   }
 
   excerpt(s: any) {
@@ -142,9 +175,19 @@ export class HomePage implements AfterViewInit{
   }
 
   newPdf() {
+    this.currentIndex = 1;
+    this.pdf = {      
+      title: 'Nuovo pdf',
+      timestamp : new Date(),
+      success : 11,
+      error : 12,
+      images : []
+    };
+    this.addSection()
     var el =document.getElementById("ex1-tab-2") 
     if(el)
       el.click() 
+    this.modal?.present();
   }
 
   back() {
@@ -154,32 +197,34 @@ export class HomePage implements AfterViewInit{
   }
 
   savePdf() {
-    this.httpClient.post("http://localhost/api.php", {...this.pdf, action:'create-pdf'}).subscribe((data)=>{
-      this.pdf = data
-    })
+    if(!this.pdf.id) {
+      this.pdf.id = this.showcases.length + 1
+      this.showcases.push(this.pdf)
+    } else {
+      const i = this.showcases.findIndex((i) => i.id == this.pdf.id)
+      this.showcases[i] = this.pdf
+    }
+    this.storageService.setItem('pdf', JSON.stringify(this.showcases))
   }
 
   cancel() {
     if(this.modal)
-    this.modal.dismiss(null, 'cancel');
-}
+      this.modal.dismiss(null, 'cancel');
+  }
 
-confirm() {
-  if(this.modal)
-    this.modal.dismiss(null, 'cancel');
-//      this.modal.dismiss(this.name, 'confirm');
+  confirm() {
+    if(this.modal)
+      this.modal.dismiss(null, 'cancel');
   }
 
   async createDirectory() {
     try {
-      let ret = await Filesystem.mkdir({
+      await Filesystem.mkdir({
         path: 'input',
         directory: FilesystemDirectory.Documents,
         recursive: false,
       });
-      alert(ret);
     } catch (e) {
-      alert(e);
     }    
   }
 

@@ -1,13 +1,31 @@
+
+<ion-menu contentId="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menu Content</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ion-list>
+      <ion-item-group>
+        <ion-item><div (click)="menuShowPdf()" class="d-flex flex-row justify-content-center align-items-center"><ion-icon style="margin-right: 10px;" name="arrow-forward-outline"></ion-icon> Apri</div></ion-item>
+        <ion-item><div class="d-flex flex-row justify-content-center align-items-center"><ion-icon style="margin-right: 10px;" name="arrow-down-circle-outline"></ion-icon> Scarica PDF</div></ion-item>
+        <ion-item><div (click)="delete()" class="d-flex flex-row justify-content-center align-items-center"><ion-icon style="margin-right: 10px;" name="trash-outline" (click)="delete()"></ion-icon> Elimina</div></ion-item>
+      </ion-item-group>
+    </ion-list>  
+  </ion-content>
+</ion-menu>
+
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
       <div class="d-flex justify-content-between">
         <div>
-          {{ title }}
+          {{ title }} 
         </div>
         <div>
-          <ng-container *ngIf="counter == 0">
-            <ion-icon  id="open-modal" (click)="newPdf()" name="add-outline"></ion-icon>
+          <ng-container>
+            <ion-icon  (click)="newPdf()" name="add-outline"></ion-icon>
           </ng-container>          
         </div>
           
@@ -17,8 +35,8 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div class="main">
 
+  <div class="main">
     <div class="tab-content" id="ex1-content">
       <div
         class="tab-pane fade show active"
@@ -26,19 +44,35 @@
         role="tabpanel"
         aria-labelledby="ex1-tab-1"
       >
+      <ng-container *ngIf="showcases">
+        <ion-card class="card" *ngFor="let s of showcases; let ind = index">
+          <ng-container (click)="showPdf(ind)">
+          <ion-card-header>
+            <ion-card-title>{{s.name}}</ion-card-title>
+            <ion-card-subtitle><div class="d-flex justify-content-between col-12">Creato il: {{s.timestamp | date: 'Y-MM-dd'}} <ion-icon (click)="openMenu(s) " name="menu-outline"></ion-icon></div></ion-card-subtitle>
+          </ion-card-header>
+        
+          <ion-card-content>
+            <div class="d-flex justify-content-between col-12">
+              <div><span>Foto: <b>{{getFoto(s)}}</b> Regolare: <b class="text-success">{{getSuccess(s)}}</b> Non a norma: <b class="text-danger">{{getErrors(s)}}</b></span></div>
+              <div><ion-icon (click)="showPdf(ind)" name="arrow-forward-outline"></ion-icon></div>
+            </div>
+          </ion-card-content>
+        </ng-container>
 
-      <ion-card (click)="show(s.id)" class="card" *ngFor="let s of showcases">
+        </ion-card>
+      </ng-container>
+
+      <ion-card class="card" *ngIf="!showcases.length">
 
         <ion-card-header>
-          <ion-card-title>{{s.name}}</ion-card-title>
-          <ion-card-subtitle>Creato il: {{s.timestamp | date: 'Y-MM-dd'}} </ion-card-subtitle>
+          <ion-card-title>Nessun Report in archivio</ion-card-title>
         </ion-card-header>
       
         <ion-card-content>
           <div class="d-flex justify-content-between col-12">
-            <div><span>Regolare: <b class="text-success">{{s.success}}</b> Non a norma: <b class="text-danger">{{s.error}}</b></span></div>
-            <div><ion-icon (click)="showPdf(s.id)" name="arrow-forward-outline"></ion-icon></div>
-          </div>
+            <div>Per iniziare premi il tasto + per crere il primo report</div>
+          </div>          
         </ion-card-content>
       </ion-card>
       
@@ -68,61 +102,81 @@
           </ng-template>
         </ion-modal>
         <div style="text-align: center;">
-          <h1>{{pdf.title}}</h1>
-          <p>Creato il: {{pdf.timestamp | date: 'dd-MM-Y'}}</p>
+          <div class="col-12"><h1 class="col-12">{{pdf.title}}</h1>
+          </div>
+          <div>Creato il: {{pdf.timestamp | date: 'dd-MM-Y'}}</div>
+          <ion-item-group>
+            <ion-item-divider></ion-item-divider>
+          </ion-item-group>
         </div>
         <ion-slides (ionSlideDidChange)="updateSlideIndex($event)" #mySlider pager="false">
           <ion-slide *ngFor="let pdf of pdf.images;let i = index">
-
-
           <div>
-            <div><h1>Fotografia #{{i + 1}}</h1></div>
             <div>
               <ion-list>
-                <ion-item>
-                  <div class="d-flex justify-content-between col-12">
-                    <div class="col-10">
-                      <img class="image" alt="Silhouette of mountains" src="{{pdf.src ? pdf.src : 'assets/images/image.png'}}" />
-                    </div>
-                    <div class="d-flex flex-column justify-content-center align-items-center">
-                      <div>
-                        <ion-icon (click)="addPhotoToGallery(i)" name="camera-outline"></ion-icon>
+                <ion-item-group>
+                  <ion-item><h1>Fotografia #{{i + 1}}</h1></ion-item>
+         
+                  <ion-item>
+                    <div class="d-flex justify-content-between col-12">
+                      <div class="col-10">
+                        <ion-img src="{{pdf.src ? pdf.src : 'assets/images/image.png'}}"></ion-img>
+
                       </div>
-                      <div>
-                        <ion-icon name="image-outline"></ion-icon>
+                      <div class="d-flex flex-column justify-content-center align-items-center">
+                        <div>
+                          <ion-icon (click)="addPhotoToGallery(i)" name="camera-outline"></ion-icon>
+                        </div>
+                        <div>
+                          <ion-icon name="image-outline"></ion-icon>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </ion-item>
+                  </ion-item>
 
-                <ion-item>
-                  <ion-input [(ngModel)]="pdf.name" labelPlacement="floating" value="hi@ionic.io">
-                    <div slot="label">Etichetta foto</div>
-                  </ion-input>
-                </ion-item>
+                  <ion-item>
+                    <ion-label>Etichetta</ion-label>
+                    <ion-input [(ngModel)]="pdf.name" labelPlacement="floating" label="Etichetta" value="">
+                    </ion-input>
+                  </ion-item>
 
-                <ion-item>
-                  <ion-select [(ngModel)]="pdf.desc" label="Descrizione" labelPlacement="stacked" placeholder="Precompilate">
-                    <ion-select-option value="Marcatura leggibile">Marcatura leggibile</ion-select-option>
-                    <ion-select-option value="No deformazioni e/o cricche visive">No deformazioni e/o cricche visive</ion-select-option>
-                    <ion-select-option value="Nessuna corrosione e/o ossidazione visiva">Nessuna corrosione e/o ossidazione visiva</ion-select-option>  
-                    <ion-select-option value="Collegamenti a vite serrati">Collegamenti a vite serrati</ion-select-option>
-                    <ion-select-option value="Fissaggio al sottofondo">Fissaggio al sottofondo</ion-select-option>
-                    <ion-select-option value="Stabilità">Stabilità</ion-select-option>
-                    <ion-select-option value="Coppia di serraggio dei fissaggi">Coppia di serraggio dei fissaggi</ion-select-option>
-                    <ion-select-option value="Libertà di movimento di tutte le parti mobili">Libertà di movimento di tutte le parti mobili</ion-select-option>
-                    <ion-select-option value="Controllo manuale/visivo fune">Controllo manuale/visivo fune</ion-select-option>
-                    <ion-select-option value="Precarico della fune">Precarico della fune</ion-select-option>
-                  </ion-select>             
-                </ion-item>
+                  <ion-item>
+                    <ion-select style="width: 100%;" [(ngModel)]="pdf.desc" label="Descrizione" labelPlacement="stacked" placeholder="Precompilate">
+                      <ion-select-option value="Marcatura leggibile">Marcatura leggibile</ion-select-option>
+                      <ion-select-option value="No deformazioni e/o cricche visive">No deformazioni e/o cricche visive</ion-select-option>
+                      <ion-select-option value="Nessuna corrosione e/o ossidazione visiva">Nessuna corrosione e/o ossidazione visiva</ion-select-option>  
+                      <ion-select-option value="Collegamenti a vite serrati">Collegamenti a vite serrati</ion-select-option>
+                      <ion-select-option value="Fissaggio al sottofondo">Fissaggio al sottofondo</ion-select-option>
+                      <ion-select-option value="Stabilità">Stabilità</ion-select-option>
+                      <ion-select-option value="Coppia di serraggio dei fissaggi">Coppia di serraggio dei fissaggi</ion-select-option>
+                      <ion-select-option value="Libertà di movimento di tutte le parti mobili">Libertà di movimento di tutte le parti mobili</ion-select-option>
+                      <ion-select-option value="Controllo manuale/visivo fune">Controllo manuale/visivo fune</ion-select-option>
+                      <ion-select-option value="Precarico della fune">Precarico della fune</ion-select-option>
+                    </ion-select>             
+                  </ion-item>
 
 
-                <ion-item>
-                  <ion-textarea placeholder="Descrizione" [(ngModel)]="pdf.desc" label="Descrizione" labelPlacement="stacked" placeholder="">
-              
-                  </ion-textarea>                  
-                </ion-item>
+                  <ion-item>
+                    <ion-label>Descrizione Libera</ion-label>
+                    <ion-textarea placeholder="Descrizione" [(ngModel)]="pdf.desc" label="Descrizione" labelPlacement="stacked" placeholder="">
+                
+                    </ion-textarea>                  
+                  </ion-item>
 
+                  <ion-radio-group [value]="pdf.success"  [(ngModel)]="pdf.success">
+                    <ion-item>
+                      <ion-label color="success">Conforme</ion-label>
+                      <ion-radio  slot="end" [value]="1"></ion-radio>
+                    </ion-item>
+                
+                    <ion-item>
+                      <ion-label color="danger">Non conforme</ion-label>
+                      <ion-radio slot="end" [value]="0"></ion-radio>
+
+                    </ion-item>                  
+                  </ion-radio-group>
+                </ion-item-group>
+                
               </ion-list>
             </div>
           </div>
@@ -139,15 +193,12 @@
           <ion-button class="col-6" (click)="savePdf()" ><ion-icon name="save-outline"></ion-icon> Salva</ion-button>         
         </div>
 
-        <div style="padding: 1em;padding-top:0px;" class="d-flex justify-content-between">
-          <ion-button class="col-12" ><ion-icon name="document-outline"></ion-icon> Genera pdf</ion-button>    
-        </div>
-
-      <div class="tab-pane fade" id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
-        {{ pdf | json}}
       </div>
-    </div>
+  
+      <div class="tab-pane fade" id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
+      </div>
   </div>
+
   </ion-content>
   <ion-footer>
     <div class="footer">
