@@ -20,7 +20,7 @@
 }
 
 .footer ul li { 
-  width: 33%;
+  width: 50%;
 }
 
 .footer ul li a { 
@@ -70,4 +70,21 @@ ion-icon {
   height: 170px;
   margin: 20px;
   margin-left: 0px;
+}
+
+.pspace{
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.pdf_m1 {
+  margin: 38px;
+}
+.pdf_m3 {
+  margin: 38px;
+}
+.pdf_m5 {
+  margin: 38px;
+}
+ion-label {
+  font-weight: bold;
 }

@@ -1,7 +1,8 @@
 {
   "name": "showcases",
   "integrations": {
-    "capacitor": {}
+    "capacitor": {},
+    "cordova": {}
   },
   "type": "angular"
 }

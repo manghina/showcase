@@ -9,7 +9,7 @@ import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
 import {CardModule} from 'primeng/card';
 import { FormsModule } from '@angular/forms';
-
+import { DataViewModule } from 'primeng/dataview';
 
 @NgModule({
   imports: [
@@ -19,6 +19,7 @@ import { FormsModule } from '@angular/forms';
     TabViewModule,
     TableModule,
     TabMenuModule,
+    DataViewModule,
     CardModule,
 
     FormsModule,
