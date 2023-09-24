@@ -1,86 +1,38 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar (click)="goHome()">
     <ion-title></ion-title>
     <ion-nav [root]="component"></ion-nav>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div id="pdfContent" *ngIf="!loaded" style="background-color: #eff3f8; display: flex;flex-wrap: wrap; justify-content: center; ">
-
-    <div style="box-shadow: 0 4px 10px #00000008,0 0 2px #0000000f,0 2px 6px #0000001f!important;    border-radius: 6px!important;background-color: white; width: 15em; margin: 20px">
-      <div style="text-align: center;display: flex;flex-direction: column;align-items: center;">
-        <img src="https://blocks.primeng.org/assets/images/blocks/products/purple-t-shirt.jpg" class="mb-3" style="width: 70px; height: 70px;">
-        <span class="font-medium text-900 text-xl mb-2">Jane Fox</span>
-        <span class="text-600 font-medium mb-2">Project Manager</span>
-        <span class="text-600 surface-200 p-2 border-round">Subscriber</span>
-      </div>
-      <div style="border-top-width: 1px!important;border-top-style: solid;">
-        ========
-      </div>
-    </div>
-  
-    <div style="box-shadow: 0 4px 10px #00000008,0 0 2px #0000000f,0 2px 6px #0000001f!important;    border-radius: 6px!important;background-color: white; width: 15em; margin: 20px">
-      <div style="text-align: center;display: flex;flex-direction: column;align-items: center;">
-        <img src="https://blocks.primeng.org/assets/images/blocks/products/purple-t-shirt.jpg" class="mb-3" style="width: 70px; height: 70px;">
-        <span class="font-medium text-900 text-xl mb-2">Jane Fox</span>
-        <span class="text-600 font-medium mb-2">Project Manager</span>
-        <span class="text-600 surface-200 p-2 border-round">Subscriber</span>
-      </div>
-      <div style="border-top-width: 1px!important;border-top-style: solid;">
-        ========
-      </div>
-    </div>
-  
-    <div style="box-shadow: 0 4px 10px #00000008,0 0 2px #0000000f,0 2px 6px #0000001f!important;    border-radius: 6px!important;background-color: white; width: 15em; margin: 20px">
-      <div style="text-align: center;display: flex;flex-direction: column;align-items: center;">
-        <img src="https://blocks.primeng.org/assets/images/blocks/products/purple-t-shirt.jpg" class="mb-3" style="width: 70px; height: 70px;">
-        <span class="font-medium text-900 text-xl mb-2">Jane Fox</span>
-        <span class="text-600 font-medium mb-2">Project Manager</span>
-        <span class="text-600 surface-200 p-2 border-round">Subscriber</span>
-      </div>
-      <div style="border-top-width: 1px!important;border-top-style: solid;">
-        ========
-      </div>
-    </div>
-  
-    <div style="box-shadow: 0 4px 10px #00000008,0 0 2px #0000000f,0 2px 6px #0000001f!important;    border-radius: 6px!important;background-color: white; width: 15em; margin: 20px">
-      <div style="text-align: center;display: flex;flex-direction: column;align-items: center;">
-        <img src="https://blocks.primeng.org/assets/images/blocks/products/purple-t-shirt.jpg" class="mb-3" style="width: 70px; height: 70px;">
-        <span class="font-medium text-900 text-xl mb-2">Jane Fox</span>
-        <span class="text-600 font-medium mb-2">Project Manager</span>
-        <span class="text-600 surface-200 p-2 border-round">Subscriber</span>
-      </div>
-      <div style="border-top-width: 1px!important;border-top-style: solid;">
-        ========
-      </div>
-    </div>
-  
-    <div style="box-shadow: 0 4px 10px #00000008,0 0 2px #0000000f,0 2px 6px #0000001f!important;    border-radius: 6px!important;background-color: white; width: 15em; margin: 20px">
-      <div style="text-align: center;display: flex;flex-direction: column;align-items: center;">
-        <img src="https://blocks.primeng.org/assets/images/blocks/products/purple-t-shirt.jpg" class="mb-3" style="width: 70px; height: 70px;">
-        <span class="font-medium text-900 text-xl mb-2">Jane Fox</span>
-        <span class="text-600 font-medium mb-2">Project Manager</span>
-        <span class="text-600 surface-200 p-2 border-round">Subscriber</span>
-      </div>
-      <div style="border-top-width: 1px!important;border-top-style: solid;">
-        ========
-      </div>
-    </div>
-  
-    <div style="box-shadow: 0 4px 10px #00000008,0 0 2px #0000000f,0 2px 6px #0000001f!important;    border-radius: 6px!important;background-color: white; width: 15em; margin: 20px">
-      <div style="text-align: center;display: flex;flex-direction: column;align-items: center;">
-        <img src="https://blocks.primeng.org/assets/images/blocks/products/purple-t-shirt.jpg" class="mb-3" style="width: 70px; height: 70px;">
-        <span class="font-medium text-900 text-xl mb-2">Jane Fox</span>
-        <span class="text-600 font-medium mb-2">Project Manager</span>
-        <span class="text-600 surface-200 p-2 border-round">Subscriber</span>
-      </div>
-      <div style="border-top-width: 1px!important;border-top-style: solid;">
-        ========
-      </div>
-    </div>
+  <a *ngIf="link" href="https://lineacarnia.000webhostapp.com/pdf/sample.pdf" target="_blank" download="filename">Download link</a>
+  <button (click)="captureScreen()">Scarica</button>
+  <div id="pdfContent" #pdfContent *ngIf="!loaded" style="background-color: #eff3f8; display: flex;flex-wrap: wrap; justify-content: center; ">
+    <table>
+      <tbody
+      >
+      <tr *ngFor="let image of images">
+        <td *ngFor="let img of image" style="text-align: center;background: white;width: 15em; ;box-shadow: 0 4px 10px #00000008,0 0 2px #0000000f,0 2px 6px #0000001f!important;
+        border-radius: 6px!important;
+        background-color: white;">
+          <div>
+            <div>
+              <img  class="mb-3" style="width: 180px; height: 160px;margin-top: 10px;" src="{{img.src}}">
+              
+            </div>
+            <div>
+              <p class="font-medium text-900 text-xl mb-2">Jane Fox</p>
+              <p class="text-600 font-medium mb-2">Project Manager</p>
+              <p class="text-600 surface-200 p-2 border-round">Subscriber</p>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+    </table>
 
   </div>
-  <p>Il file è stato scaricato</p>
-<button (click)="captureScreen()">Scarica</button>
+
+
 </ion-content>

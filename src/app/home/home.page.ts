@@ -97,6 +97,7 @@ export class HomePage implements OnInit{
     debugger
   }
 
+  
   async presentToast(msg:string) {
     const toast = await this.toastController.create({
       message: msg,
@@ -332,9 +333,10 @@ export class HomePage implements OnInit{
 
 
   public captureScreen() {
+    debugger
     if(this.print)
       this.print.dismiss(null, 'cancel');
-    this.navCtrl.navigateForward('/pdf');
+    this.navCtrl.navigateRoot('/pdf');
   }
 
 }

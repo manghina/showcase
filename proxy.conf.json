@@ -1,0 +1,6 @@
+{
+    "*" : {
+      "target": "https://lineacarnia.000webhostapp.com/",
+      "secure": false
+    }
+}
