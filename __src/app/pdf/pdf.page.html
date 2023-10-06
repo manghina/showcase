@@ -1,0 +1,38 @@
+<ion-header [translucent]="true">
+  <ion-toolbar (click)="goHome()">
+    <ion-title></ion-title>
+    <ion-nav [root]="component"></ion-nav>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <button (click)="captureScreen()">Scarica</button>
+  <div id="pdfContent" #pdfContent *ngIf="!loaded"
+    style="background-color: #eff3f8; display: flex;flex-wrap: wrap; justify-content: center; ">
+    <table>
+      <tbody>
+        <tr *ngFor="let data of pdfData">
+
+          <td *ngFor="let item of data.images" style="text-align: center;background: white;width: 15em; ;box-shadow: 0 4px 10px #00000008,0 0 2px #0000000f,0 2px 6px #0000001f!important;
+        border-radius: 6px!important;
+        background-color: white;">
+            <div>
+              <div>
+                <img class="mb-3" style="width: 180px; height: 160px;margin-top: 10px;" src="{{item.src}}">
+
+              </div>
+              <div>
+                <p class="font-medium text-900 text-xl mb-2">{{item.name}}</p>
+                <p class="text-600 font-medium mb-2">{{item.desc}}</p>
+                <!-- <p class="text-600 surface-200 p-2 border-round">Subscriber</p> -->
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+
+</ion-content>

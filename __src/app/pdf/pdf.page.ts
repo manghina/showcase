@@ -1,12 +1,12 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import axios from 'axios';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { SessionStorageService } from 'ngx-storage-api';
 import { HomePage } from '../home/home.page';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { SessionStorageService } from 'ngx-storage-api';
+import queryString from 'query-string';
+import axios from 'axios';
 
-import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
 
 @Component({
@@ -14,48 +14,42 @@ import { NavController } from '@ionic/angular';
   templateUrl: './pdf.page.html',
   styleUrls: ['./pdf.page.scss'],
 })
-export class PdfPage implements AfterViewInit {
+export class PdfPage implements OnInit {
   loaded = false
   component = HomePage;
-
+  
   @ViewChild('pdfContent', { static: true }) map: ElementRef | undefined
-  link: any = ''
+  link : any = ''
   pdfData = JSON.parse(this.storageService.getItem('pdf'));
-  row = 0;
-  col = 0;
-  data: any = {}
-
-  constructor(private http: HttpClient, public navCtrl: NavController, public storageService: SessionStorageService, private route: ActivatedRoute) {
-    const data = this.storageService.getItem('print');
-    if (data)
-      this.data = JSON.parse(data)
-  }
-  ngAfterViewInit(): void {
-    this.captureScreen()
+  
+  constructor(private http: HttpClient, public navCtrl: NavController, public storageService: SessionStorageService) {
+    
   }
 
+  ngOnInit() {
 
-  back() {
-    this.navCtrl.navigateRoot('/');
   }
+
   captureScreen() {
-
+    
     var data = document.getElementById('pdfContent') as any;
-    var html = data.outerHTML
+    debugger
+    var html = data.outerHTML 
+    
 
     var headers = new HttpHeaders();
     headers.append('Content-Type', 'application/x-www-form-urlencoded');
     headers.append('Access-Control-Allow-Origin', '*');
 
 
-    const formData = { html: html };
-    const encodedData = JSON.stringify(formData);
+    const formData = {html: html};
+    const encodedData = queryString.stringify(formData);
 
     axios({
-      method: 'post',
+      method: 'post', // or 'put', 'get', 'delete', etc.
       url: 'https://www.lineavitacarnia.com/pdf/1.php',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type':'application/x-www-form-urlencoded',
       },
       data: encodedData,
     })
@@ -65,6 +59,30 @@ export class PdfPage implements AfterViewInit {
       .catch((error) => {
         console.error('Error:', error);
       });
+
+    // this.http.post("https://www.lineavitacarnia.com/pdf/1.php", { headers:headers,encodedData, observe: 'response' })
+    //   .subscribe(response => {
+    //     console.log(response);
+    //   }, error => {
+
+    //     console.log(error);
+    //   });
+
+  //   this.http.post('https://lineavitacarnia.com/pdf/1.php',
+  //    {html: html},
+  //    {headers: {
+  //     'Content-Type':'multipart/form-data',
+  //     'Access-Control-Allow-Origin':'*'
+  //   }}).subscribe(
+  //     (link:any) => {
+  //      this.link = link.url
+  //   },
+  //   error => {
+  //     alert(error.message)
+  //     console.log(error)
+  //  }
+  //   )
+    
 
     html2canvas(data).then(canvas => {
       // Few necessary setting options  

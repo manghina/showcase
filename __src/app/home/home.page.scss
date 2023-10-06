@@ -12,20 +12,18 @@
 .footer {
   width: 100%;
   text-align: center;
-  font-size: 30px;
-  position: absolute;
-  bottom: -20px;
+  font-size: 30px;  
 }
 
 .footer ul {
   width: 100%;
 }
 
-.footer ul li {
+.footer ul li { 
   width: 50%;
 }
 
-.footer ul li a {
+.footer ul li a { 
   color: black
 }
 
@@ -60,16 +58,13 @@ ion-footer ion-icon {
 ion-card {
   cursor: pointer;
 }
-
 ion-card:hover {
   border: color(53, 120, 229);
-  color: rgb(53, 120, 229) !important;
+  color: rgb(53, 120, 229)!important;
 }
-
 ion-icon {
   font-size: 30px;
 }
-
 .image {
   width: 260px;
   height: 170px;
@@ -77,37 +72,19 @@ ion-icon {
   margin-left: 0px;
 }
 
-.pspace {
+.pspace{
   padding-top: 20px;
   padding-bottom: 20px;
 }
-
 .pdf_m1 {
   margin: 38px;
 }
-
 .pdf_m3 {
   margin: 38px;
 }
-
 .pdf_m5 {
   margin: 38px;
 }
-
 ion-label {
   font-weight: bold;
-}
-
-.form-tab {
-  overflow: auto;
-}
-
-.tab-pane.fade:not(.show) {
-  display: none;
-}
-
-.body {
-  background: linear-gradient(-45deg, #ff9f4d 10%, #ffc857 0, #ffc857 90%, #ff9f4d 0, #ff9f4d 100%);
-  min-height: 100vh;
-  margin-top: -10px;
 }

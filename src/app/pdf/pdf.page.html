@@ -6,33 +6,55 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <a *ngIf="link" href="https://lineacarnia.000webhostapp.com/pdf/sample.pdf" target="_blank" download="filename">Download link</a>
-  <button (click)="captureScreen()">Scarica</button>
-  <div id="pdfContent" #pdfContent *ngIf="!loaded" style="background-color: #eff3f8; display: flex;flex-wrap: wrap; justify-content: center; ">
-    <table>
-      <tbody
-      >
-      <tr *ngFor="let image of images">
-        <td *ngFor="let img of image" style="text-align: center;background: white;width: 15em; ;box-shadow: 0 4px 10px #00000008,0 0 2px #0000000f,0 2px 6px #0000001f!important;
-        border-radius: 6px!important;
-        background-color: white;">
-          <div>
-            <div>
-              <img  class="mb-3" style="width: 180px; height: 160px;margin-top: 10px;" src="{{img.src}}">
-              
-            </div>
-            <div>
-              <p class="font-medium text-900 text-xl mb-2">Jane Fox</p>
-              <p class="text-600 font-medium mb-2">Project Manager</p>
-              <p class="text-600 surface-200 p-2 border-round">Subscriber</p>
-            </div>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-    </table>
 
+  <ion-button (click)="captureScreen()">Scarica PDF</ion-button>
+  <div id="pdfContent" #pdfContent *ngIf="!loaded"
+    style="background-color: #ffffff; display: flex;flex-wrap: wrap; justify-content: center;width: 100%">
+    <div class="body">
+
+      <div class="container c{{data.col}}" style="padding: {{data.margin}}">
+        <ng-container *ngFor="let item of data.pdf.images">
+          <div class="card-pdf item">
+            <ion-card style=" text-align: center;">
+              <ion-card-header>
+                <ion-card-title>{{item.name}}</ion-card-title>
+                <ion-card-subtitle *ngIf="item.success">
+                  <b style="color: green">Conforme</b>
+                </ion-card-subtitle>
+                <ion-card-subtitle *ngIf="!item.success">
+                  <b style="color: red">Non conforme</b>
+                </ion-card-subtitle>
+              </ion-card-header>
+
+              <ion-card-content style="min-height: 200px;max-width: 200px;">
+                <ion-img [src]="item.src" style="max-height: 200px;"></ion-img>
+                {{ item.desc }}
+              </ion-card-content>
+            </ion-card>
+          </div>
+        </ng-container>
+      </div>
+    </div>
   </div>
 
 
 </ion-content>
+
+<ion-footer>
+  <div class="footer" style="background: white;">
+    <ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
+      <li (click)="back()" class="nav-item" role="presentation">
+        <a class="nav-link" id="ex1-tab-1" data-bs-toggle="tab" href="#ex1-tabs-1" role="tab" aria-controls="ex1-tabs-1"
+          aria-selected="true">
+          <ion-icon name="home-outline" class=""></ion-icon>
+        </a>
+      </li>
+      <li class="nav-item" role="presentation" style="visibility: hidden;">
+        <a class="nav-link " id="ex1-tab-2" data-bs-toggle="tab" href="#ex1-tabs-2" role="tab"
+          aria-controls="ex1-tabs-2" aria-selected="false">
+          <ion-icon name="documents-outline" class=""></ion-icon>
+        </a>
+      </li>
+    </ul>
+  </div>
+</ion-footer>
