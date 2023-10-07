@@ -22,6 +22,8 @@
     "@angular/platform-browser": "^16.0.0",
     "@angular/platform-browser-dynamic": "^16.0.0",
     "@angular/router": "^16.0.0",
+    "@babel/core": "^7.23.0",
+    "@babel/preset-env": "^7.22.20",
     "@capacitor/android": "^5.3.0",
     "@capacitor/app": "5.0.6",
     "@capacitor/camera": "^5.0.7",
@@ -33,16 +35,20 @@
     "@capacitor/status-bar": "5.0.6",
     "@coreui/angular": "^4.5.16",
     "@coreui/icons-angular": "^4.5.16",
+    "@ionic-native/core": "^5.36.0",
+    "@ionic-native/file": "^5.36.0",
+    "@ionic-native/file-transfer": "^5.36.0",
+    "@ionic-native/in-app-browser": "^5.36.0",
     "@ionic/angular": "^6.0.0",
     "bootstrap": "^5.3.1",
     "capacitor": "^0.5.6",
+    "html2canvas": "^1.4.1",
     "ionicons": "^6.0.0",
+    "jspdf": "^2.5.1",
     "ngx-storage-api": "^1.0.3",
     "primeflex": "^3.3.1",
     "primeicons": "^6.0.1",
     "primeng": "^16.2.0",
-    "html2canvas": "^1.4.1",
-    "jspdf": "^2.5.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"
@@ -64,6 +70,8 @@
     "@types/node": "^12.11.1",
     "@typescript-eslint/eslint-plugin": "5.3.0",
     "@typescript-eslint/parser": "5.3.0",
+    "cordova-plugin-file": "^8.0.0",
+    "cordova-plugin-file-transfer": "^2.0.0",
     "eslint": "^7.26.0",
     "eslint-plugin-import": "2.22.1",
     "eslint-plugin-jsdoc": "30.7.6",
@@ -79,5 +87,11 @@
     "ts-node": "^8.3.0",
     "typescript": "~5.0.2"
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project",
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-file": {},
+      "cordova-plugin-file-transfer": {}
+    }
+  }
 }

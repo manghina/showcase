@@ -43,6 +43,9 @@
         <splash density="port-xhdpi" src="resources/android/splash/drawable-port-xhdpi-screen.png" />
         <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
+        <allow-intent href="market:*" />
+        <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
