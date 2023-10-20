@@ -6,13 +6,12 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <div id="pdfContent" #pdfContent
+       style="background-color: #ffffff;display: flex;flex-wrap: wrap;justify-content: center;width: 100%;padding-bottom: 50px;"
+       *ngIf="!loaded">
+    <div class="body margin-{{data.margin}}" style="padding: {{36 * data.margin}}px">
 
-  <ion-button (click)="captureScreen()">Scarica PDF</ion-button>
-  <div id="pdfContent" #pdfContent *ngIf="!loaded"
-    style="background-color: #ffffff; display: flex;flex-wrap: wrap; justify-content: center;width: 100%">
-    <div class="body">
-
-      <div class="container c{{data.col}}" style="padding: {{data.margin}}">
+      <div class="container" style="grid-template-columns: repeat({{data.col}}, 1fr)!important;">
         <ng-container *ngFor="let item of data.pdf.images">
           <div class="card-pdf item">
             <ion-card style=" text-align: center;">
@@ -27,7 +26,7 @@
               </ion-card-header>
 
               <ion-card-content style="min-height: 200px;max-width: 200px;">
-                <ion-img [src]="item.src" style="max-height: 200px;"></ion-img>
+                <ion-img [src]="item.src"></ion-img>
                 {{ item.desc }}
               </ion-card-content>
             </ion-card>
@@ -36,25 +35,32 @@
       </div>
     </div>
   </div>
-
-
 </ion-content>
+
+<div class="spinner-container" *ngIf="isLoading">
+  <ion-spinner color="primary"></ion-spinner>
+  <ion-label>Downloading</ion-label>
+</div>
 
 <ion-footer>
   <div class="footer" style="background: white;">
-    <ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
+    <ul class="nav nav-tabs mb-3 preview-footer" id="ex1" role="tablist">
       <li (click)="back()" class="nav-item" role="presentation">
         <a class="nav-link" id="ex1-tab-1" data-bs-toggle="tab" href="#ex1-tabs-1" role="tab" aria-controls="ex1-tabs-1"
           aria-selected="true">
           <ion-icon name="home-outline" class=""></ion-icon>
         </a>
       </li>
-      <li class="nav-item" role="presentation" style="visibility: hidden;">
-        <a class="nav-link " id="ex1-tab-2" data-bs-toggle="tab" href="#ex1-tabs-2" role="tab"
-          aria-controls="ex1-tabs-2" aria-selected="false">
-          <ion-icon name="documents-outline" class=""></ion-icon>
-        </a>
+      <li class="nav-item" role="presentation">
+        <ion-button (click)="captureScreen()">Scarica PDF</ion-button>
       </li>
+
+<!--      <li class="nav-item" role="presentation" style="visibility: hidden;">-->
+<!--        <a class="nav-link " id="ex1-tab-2" data-bs-toggle="tab" href="#ex1-tabs-2" role="tab"-->
+<!--          aria-controls="ex1-tabs-2" aria-selected="false">-->
+<!--          <ion-icon name="documents-outline" class=""></ion-icon>-->
+<!--        </a>-->
+<!--      </li>-->
     </ul>
   </div>
 </ion-footer>

@@ -128,16 +128,19 @@
               </ion-item>
               <ion-item>
                 <ion-label position="stacked">Elementi per riga</ion-label>
-                <ion-input type="number" (ionChange)="redrawImages()" min="1" max="5" placeholder="3"
-                  [(ngModel)]="printPdfItem.col"></ion-input>
+                <ion-select style="width: 100%;max-width: 310px;" [(ngModel)]="printPdfItem.col">
+                  <ion-select-option value="1">1</ion-select-option>
+                  <ion-select-option value="2">2</ion-select-option>
+                  <ion-select-option value="3">3</ion-select-option>
+                  <ion-select-option value="4">4</ion-select-option>
+                </ion-select>
               </ion-item>
               <ion-item style="margin-bottom:20px">
                 <ion-label position="stacked">Margine (cm)</ion-label>
-                <ion-select style="width: 100%;max-width: 310px;" [(ngModel)]="printPdfItem.margin" label="Margine (cm)"
-                  labelPlacement="stacked">
-                  <ion-select-option value="0px">1</ion-select-option>
-                  <ion-select-option value="10px">3</ion-select-option>
-                  <ion-select-option value="20px">5</ion-select-option>
+                <ion-select style="width: 100%;max-width: 310px;" [(ngModel)]="printPdfItem.margin">
+                  <ion-select-option value="1">1</ion-select-option>
+                  <ion-select-option value="3">3</ion-select-option>
+                  <ion-select-option value="5">5</ion-select-option>
                 </ion-select>
               </ion-item>
 
@@ -241,6 +244,18 @@
 
       </ion-slides>
 
+      <ion-fab class="left-arrow-slide" *ngIf="currentIndex!==1" (click)="goPrevSlide()">
+        <ion-fab-button>
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+
+      <ion-fab class="right-arrow-slide" *ngIf="currentIndex<pdf.images.length" (click)="goNextSlide()">
+        <ion-fab-button>
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+
       <div *ngIf="pdf.title" class="d-flex flex-row align-items-center justify-content-center col-12">
         {{currentIndex}} / {{pdf.images.length}}
       </div>
@@ -269,7 +284,7 @@
   </div>
 
 </ion-content>
-<ion-footer>
+<ion-footer class="footer-shadow">
   <div class="footer">
     <ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
       <li (click)="toggleTab(0)" class="nav-item" role="presentation">

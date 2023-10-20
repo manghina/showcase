@@ -27,17 +27,18 @@ export class PdfPage implements AfterViewInit {
   row = 0;
   col = 0;
   data: any = {}
-
   downloadPdfName!: string;
+  public isLoading!: boolean;
 
   constructor(private http: HttpClient, public navCtrl: NavController, public file: File,
               public storageService: SessionStorageService, private route: ActivatedRoute) {
+    this.isLoading = false;
     const data = this.storageService.getItem('print');
     if (data)
       this.data = JSON.parse(data)
   }
   ngAfterViewInit(): void {
-    this.captureScreen()
+    //this.captureScreen();
   }
 
 
@@ -45,10 +46,9 @@ export class PdfPage implements AfterViewInit {
     this.navCtrl.navigateRoot('/');
   }
   captureScreen() {
+    this.isLoading = true;
     var data = document.getElementById('pdfContent') as any;
     var html = data.outerHTML;
-    const options = {background:"white",height :data.clientHeight , width : data.clientWidth  };
-
 
     var headers = new HttpHeaders();
     headers.append('Content-Type', 'application/x-www-form-urlencoded');
@@ -68,7 +68,6 @@ export class PdfPage implements AfterViewInit {
     })
       .then((response) => {
         this.downloadPdfName = response.data.url;
-        console.log('Response:', response.data);
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -91,16 +90,15 @@ export class PdfPage implements AfterViewInit {
     //   this.loaded = true;
     // });
 
-    html2canvas(data, options).then(async canvas =>  {
+    html2canvas(data).then(async canvas =>  {
       //Initialize JSPDF
       var doc = new jsPDF("p","mm","a4");
       //Converting canvas to Image
       let imgData = canvas.toDataURL("image/PNG");
 
-      console.log("image data is " + imgData);
-        var imgWidth = 208;
-        var position = 0;
-        var imgHeight = canvas.height * imgWidth / canvas.width;
+      var imgWidth = 208;
+      var position = 0;
+      var imgHeight = canvas.height * imgWidth / canvas.width;
       //Add image Canvas to PDF
       // @ts-ignore
       doc.addImage(imgData, 'PNG',  0, position, imgWidth,imgHeight );
@@ -114,6 +112,9 @@ export class PdfPage implements AfterViewInit {
         data: base64,
         directory: Directory.Documents
       });
+
+      this.isLoading = false;
+      window.alert("Successfully downloaded");
     });
   }
 

@@ -37,8 +37,8 @@ export class HomePage implements OnInit {
   menuType: string = 'overlay';
 
   printPdfItem = {
-    col: 3,
-    margin: 'pdf_m1',
+    col: "1",
+    margin: "1",
     pdf: {
       title: '',
       timestamp: new Date(),
@@ -188,7 +188,7 @@ export class HomePage implements OnInit {
       name: '',
       desc: '',
       success: 1
-    })
+    });
 
     setTimeout(() => {
       if (this.slides) {
@@ -227,15 +227,15 @@ export class HomePage implements OnInit {
   }
 
   printPdf() {
-    this.printPdfItem.margin = '10px',
-      this.printPdfItem.col = 3;
+    this.printPdfItem.margin = "1";
+    this.printPdfItem.col = "1";
     this.menu?.close()
     this.printPdfItem.pdf = this.currentMenuItem
     this.print?.present()
     this.redrawImages()
   }
   getCurrentPrintSize() {
-    const j = this.printPdfItem.col
+    const j = parseInt(this.printPdfItem.col);
     switch (j) {
       case 1:
         return 'col-12';
@@ -250,7 +250,7 @@ export class HomePage implements OnInit {
     return 'col-12';
   }
   redrawImages() {
-    const j = this.printPdfItem.col
+    const j = parseInt(this.printPdfItem.col);
     this.printPdfItem.pdf.rows = [];
     let row: any[] = []
     for (let i = 0; i < this.currentMenuItem.images.length; i++) {
@@ -331,7 +331,7 @@ export class HomePage implements OnInit {
       this.modal.dismiss(null, 'cancel');
   }
   download() {
-    this.captureScreen()
+    this.captureScreen();
   }
 
   cancel2() {
@@ -344,8 +344,6 @@ export class HomePage implements OnInit {
       this.modal.dismiss(null, 'cancel');
   }
 
-
-
   public captureScreen() {
     this.storageService.setItem('print', JSON.stringify(this.printPdfItem))
     if (this.print)
@@ -353,4 +351,11 @@ export class HomePage implements OnInit {
     this.navCtrl.navigateRoot('/pdf');
   }
 
+  goPrevSlide() {
+    this.slides?.slidePrev();
+  }
+
+  goNextSlide() {
+    this.slides?.slideNext();
+  }
 }
