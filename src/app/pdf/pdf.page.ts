@@ -1,13 +1,16 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import axios from 'axios';
 import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
-import { SessionStorageService } from 'ngx-storage-api';
-import { HomePage } from '../home/home.page';
+import {jsPDF} from 'jspdf';
+import {File} from '@ionic-native/file/ngx';
 
-import { ActivatedRoute } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import {SessionStorageService} from 'ngx-storage-api';
+import {HomePage} from '../home/home.page';
+
+import {ActivatedRoute} from '@angular/router';
+import {NavController} from '@ionic/angular';
+import {Directory, Filesystem, FilesystemDirectory} from "@capacitor/filesystem";
 
 @Component({
   selector: 'app-pdf',
@@ -25,7 +28,10 @@ export class PdfPage implements AfterViewInit {
   col = 0;
   data: any = {}
 
-  constructor(private http: HttpClient, public navCtrl: NavController, public storageService: SessionStorageService, private route: ActivatedRoute) {
+  downloadPdfName!: string;
+
+  constructor(private http: HttpClient, public navCtrl: NavController, public file: File,
+              public storageService: SessionStorageService, private route: ActivatedRoute) {
     const data = this.storageService.getItem('print');
     if (data)
       this.data = JSON.parse(data)
@@ -39,9 +45,10 @@ export class PdfPage implements AfterViewInit {
     this.navCtrl.navigateRoot('/');
   }
   captureScreen() {
-
     var data = document.getElementById('pdfContent') as any;
-    var html = data.outerHTML
+    var html = data.outerHTML;
+    const options = {background:"white",height :data.clientHeight , width : data.clientWidth  };
+
 
     var headers = new HttpHeaders();
     headers.append('Content-Type', 'application/x-www-form-urlencoded');
@@ -60,29 +67,64 @@ export class PdfPage implements AfterViewInit {
       data: encodedData,
     })
       .then((response) => {
+        this.downloadPdfName = response.data.url;
         console.log('Response:', response.data);
       })
       .catch((error) => {
         console.error('Error:', error);
       });
 
-    html2canvas(data).then(canvas => {
-      // Few necessary setting options  
-      var imgWidth = 208;
-      var pageHeight = 295;
-      var imgHeight = canvas.height * imgWidth / canvas.width;
-      var heightLeft = imgHeight;
+    // html2canvas(data).then(canvas => {
+    //   // Few necessary setting options
+    //   var imgWidth = 208;
+    //   var pageHeight = 295;
+    //   var imgHeight = canvas.height * imgWidth / canvas.width;
+    //   var heightLeft = imgHeight;
+    //
+    //   const contentDataURL = canvas.toDataURL('image/png')
+    //   // @ts-ignore
+    //   let pdf = new jsPDF('p', 'mm', 'a4'); // A4 size page of PDF
+    //   var position = 0;
+    //   pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
+    //   const filename = 'Report_2023_09_30.pdf';
+    //   pdf.save(filename); // Generated PDF
+    //   this.loaded = true;
+    // });
 
-      const contentDataURL = canvas.toDataURL('image/png')
+    html2canvas(data, options).then(async canvas =>  {
+      //Initialize JSPDF
+      var doc = new jsPDF("p","mm","a4");
+      //Converting canvas to Image
+      let imgData = canvas.toDataURL("image/PNG");
+
+      console.log("image data is " + imgData);
+        var imgWidth = 208;
+        var position = 0;
+        var imgHeight = canvas.height * imgWidth / canvas.width;
+      //Add image Canvas to PDF
       // @ts-ignore
-      let pdf = new jsPDF('p', 'mm', 'a4'); // A4 size page of PDF  
-      var position = 0;
-      pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
-      const filename = 'Report_2023_09_30.pdf';
-      pdf.save(filename); // Generated PDF  
-      this.loaded = true
+      doc.addImage(imgData, 'PNG',  0, position, imgWidth,imgHeight );
+
+      let pdfOutput = doc.output('blob');
+
+      const base64 = await this.convertBlobToBase64(pdfOutput) as string;
+
+      await Filesystem.writeFile({
+        path: this.downloadPdfName,
+        data: base64,
+        directory: Directory.Documents
+      });
     });
   }
+
+  private convertBlobToBase64 = (blob :Blob)=> new Promise ((resolve,reject) =>{
+    const reader = new FileReader;
+    reader.onerror = reject;
+    reader.onload = () =>{
+      resolve(reader.result);
+    };
+    reader.readAsDataURL(blob);
+  });
 
   goHome() {
     this.navCtrl.navigateRoot('/');
